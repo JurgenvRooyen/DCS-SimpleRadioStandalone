@@ -72,7 +72,7 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.Input
             ; //intercom used to represent null as we cant
 
         private Settings.GlobalSettingsStore _globalSettings = Settings.GlobalSettingsStore.Instance;
-
+        long lastAxisPoll;
 
         public InputDeviceManager(Window window, MainWindow.ToggleOverlayCallback _toggleOverlayCallback)
         {
@@ -619,6 +619,7 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.Input
 
         public void StartDetectPtt(DetectPttCallback callback)
         {
+
             _detectPtt = true;
             //detect the state of all current buttons
             var pttInputThread = new Thread(() =>
@@ -808,7 +809,9 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.Input
                         }
                     }
 
-                    if ((int)bindState.MainDevice.InputBind >= (int)InputBinding.IntercomVolume)
+                    long now = DateTime.Now.Ticks;
+
+                    if ((int)bindState.MainDevice.InputBind >= (int)InputBinding.IntercomVolume && (now - lastAxisPoll) > 250000)
                     {
                         switch (bindState.MainDevice.InputBind)
                         {
@@ -1058,7 +1061,8 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.Input
                         }
 
                         double scaling = AxisTuningHelper.GetCurvaturePointValue(value / (double)ushort.MaxValue, inputDeviceBinding.Curvature, inputDeviceBinding.Invert);
-                        return (int)(value * scaling);
+                  
+                        return (int)Math.Round(ushort.MaxValue * scaling);
                     }
                 }
                 catch (Exception e)
