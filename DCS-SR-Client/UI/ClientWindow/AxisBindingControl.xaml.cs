@@ -58,7 +58,7 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.UI
                 if (currentInputProfile.ContainsKey(ControlInputBinding)
                     && devices[ControlInputBinding] is InputAxisDevice axisDevice)
                 {
-                    Device.Text = axisDevice.DeviceName.Substring(0, 18);
+                    Device.Text = axisDevice.DeviceName.Length > 18 ? axisDevice.DeviceName.Substring(0, 18) : axisDevice.DeviceName;
                     DeviceText.Text = axisDevice.Axis;
                     CurvatureSlider.Value = axisDevice.Curvature;
                 }
@@ -86,7 +86,7 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.UI
                 DeviceClear.IsEnabled = true;
                 DeviceButton.IsEnabled = true;
 
-                Device.Text = device.DeviceName.Substring(0, 20);
+                Device.Text = device.DeviceName.Length > 20 ? device.DeviceName.Substring(0, 20) : device.DeviceName;
                 DeviceText.Text = device.Axis + " Axis";
 
                 device.InputBind = ControlInputBinding;

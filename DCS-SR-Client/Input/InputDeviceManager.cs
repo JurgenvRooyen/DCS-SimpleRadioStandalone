@@ -1057,7 +1057,8 @@ namespace Ciribob.DCS.SimpleRadio.Standalone.Client.Input
                             value = (int)state.GetType().GetProperty(inputDeviceBinding.Axis).GetValue(state);
                         }
 
-                        AxisTuningHelper.GetCurvaturePointValue(value / (double)ushort.MaxValue, inputDeviceBinding.Curvature, inputDeviceBinding.Invert);
+                        double scaling = AxisTuningHelper.GetCurvaturePointValue(value / (double)ushort.MaxValue, inputDeviceBinding.Curvature, inputDeviceBinding.Invert);
+                        return (int)(value * scaling);
                     }
                 }
                 catch (Exception e)
